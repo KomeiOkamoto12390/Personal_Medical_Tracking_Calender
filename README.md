@@ -62,7 +62,7 @@ Native Windows app (C# / WPF on .NET 10). No account, no cloud — your data sta
 
 ### Installer (recommended)
 
-1. Download `KomeiOkamoto.MedicalCalendar-win-Setup.exe` from the repository's **Releases** page.
+1. Download `MedicalCalendar-Install.exe` from the repository's **Releases** page.
 2. Double-click it. It installs for your Windows user only. No administrator prompt, no questions. Medical Calendar opens when it's done and appears in the Start menu.
 
 **Updates are automatic.** Each time the app starts, it quietly checks for a newer version and downloads it in the background. When it's ready, a **"Update ready"** box appears in the sidebar:
@@ -240,7 +240,7 @@ Installed copies update themselves from this repository's **GitHub Releases**, u
    ```cmd
    dotnet vpk upload github --repoUrl https://github.com/KomeiOkamoto12390/Personal_Medical_Tracking_Calender --outputDir artifacts\releases --tag v1.2.3 --releaseName "Medical Calendar 1.2.3" --publish --token <token>
    ```
-   Optionally attach `dist\MedicalCalendar.exe` (portable) to the same release.
+   Then edit the release on GitHub and attach `artifacts\MedicalCalendar-Install.exe` (the installer users download) and, optionally, `dist\MedicalCalendar.exe` (portable).
 7. Running copies pick up the update on their next start.
 
 **Testing an update locally.** Set `MEDCAL_UPDATE_SOURCE` to a folder containing `vpk pack` output (or an http URL) and `MEDCAL_DATA_DIR` to a test data folder, then start an installed copy.

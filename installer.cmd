@@ -1,6 +1,7 @@
 @echo off
 rem Builds the installer (Setup.exe) and update packages with Velopack.
-rem Output: artifacts\releases\  (MedicalCalendar-win-Setup.exe, *.nupkg, releases.win.json, ...)
+rem Output: artifacts\MedicalCalendar-Install.exe   (the installer users download)
+rem         artifacts\releases\                   (Velopack update packages: *.nupkg, releases.win.json, ...)
 rem
 rem Version comes from <Version> in src\MedicalCalendar\MedicalCalendar.csproj.
 rem Keep earlier releases in artifacts\releases so vpk can build small delta updates.
@@ -29,5 +30,8 @@ dotnet vpk pack ^
   --icon src\MedicalCalendar\Assets\app.ico ^
   --outputDir artifacts\releases || exit /b 1
 
+rem Friendly name for the release asset users download.
+copy /y artifacts\releases\KomeiOkamoto.MedicalCalendar-win-Setup.exe artifacts\MedicalCalendar-Install.exe >nul || exit /b 1
+
 echo.
-echo Installer: %~dp0artifacts\releases\KomeiOkamoto.MedicalCalendar-win-Setup.exe
+echo Installer: %~dp0artifacts\MedicalCalendar-Install.exe
