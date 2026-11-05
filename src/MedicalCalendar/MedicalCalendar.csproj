@@ -23,6 +23,9 @@
     <!-- Manifest: asInvoker (no UAC prompt), Per-Monitor-V2 DPI, Win10/11 compat. -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
+    <!-- Icon for the exe (Explorer, Start menu, shortcuts). Regenerate with tools\make-icon.ps1. -->
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+
     <!-- Custom Main (Program.cs) so the Velopack installer/updater hooks run before WPF starts. -->
     <StartupObject>MedicalCalendar.Program</StartupObject>
 
@@ -48,6 +51,11 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="MedicalCalendar.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Also embedded as a WPF resource for the window/title bar/taskbar icon. -->
+    <Resource Include="Assets\app.ico" />
   </ItemGroup>
 
   <ItemGroup>

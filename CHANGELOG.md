@@ -7,6 +7,10 @@ All notable changes to Medical Calendar are listed here. Versions follow [Semant
 ### Added
 - **Installer and automatic updates** (Velopack). `Setup.exe` installs for the current user with no admin prompt. Installed copies check GitHub Releases on start, download updates in the background (small delta packages) and offer **Restart to update**, or apply them when the app closes. Data is stored separately and is never touched by an update or uninstall. A safety copy is saved to `backups\` before each update.
 - App version shown in the sidebar.
+- App icon (calendar page with a medical cross) for the exe, window, taskbar, Start menu and installer.
+
+### Changed
+- The window opens maximized.
 - Automated tests (`dotnet test`).
 
 ## [1.0.0] — 2026-11-05

@@ -184,6 +184,7 @@ MedicalCalendar.sln
 run.cmd / publish.cmd           Dev run and portable release build
 installer.cmd                   Installer + update packages (Velopack)
 dotnet-tools.json               Pinned build tools (vpk)
+tools/make-icon.ps1             Regenerates the app icon (src/MedicalCalendar/Assets/app.ico)
 docs/                           Screenshots and a sample report
 tests/MedicalCalendar.Tests/    xUnit tests: data/backup/recovery, export, PDF, entry editing
 src/MedicalCalendar/

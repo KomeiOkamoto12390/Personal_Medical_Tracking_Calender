@@ -26,6 +26,7 @@ dotnet vpk pack ^
   --mainExe MedicalCalendar.exe ^
   --packTitle "Medical Calendar" ^
   --packAuthors "Komei Okamoto" ^
+  --icon src\MedicalCalendar\Assets\app.ico ^
   --outputDir artifacts\releases || exit /b 1
 
 echo.
