@@ -11,6 +11,7 @@ All notable changes to Medical Calendar are listed here. Versions follow [Semant
 
 ### Changed
 - The window opens maximized.
+- Licensed under the MIT License.
 - Automated tests (`dotnet test`).
 
 ## [1.0.0] — 2026-11-05

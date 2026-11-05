@@ -253,6 +253,6 @@ Installed copies update themselves from this repository's **GitHub Releases**, u
 
 ## License
 
-Copyright © 2026 Komei Okamoto. No open-source licence has been chosen yet, so all rights are reserved.
+[MIT](LICENSE) © 2026 Komei Okamoto.
 
 Third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
