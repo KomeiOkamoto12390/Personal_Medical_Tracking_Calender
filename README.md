@@ -153,6 +153,7 @@ Paste `%LOCALAPPDATA%\MedicalCalendar` into the File Explorer address bar to ope
 |---|---|
 | Run in development | `run.cmd` or `dotnet run --project src/MedicalCalendar` |
 | Build the release exe | `publish.cmd` → `dist\MedicalCalendar.exe` |
+| Run the tests | `dotnet test` |
 
 The helper scripts are `.cmd` files so PowerShell's script execution policy can't block them. If `dotnet` isn't recognised right after installing the SDK, open a new terminal.
 
@@ -166,6 +167,7 @@ The release build is a single, **self-contained** x64 exe (about 215 MB, because
 MedicalCalendar.sln
 run.cmd / publish.cmd           Dev run and release build
 docs/                           Screenshots and a sample report
+tests/MedicalCalendar.Tests/    xUnit tests: data/backup/recovery, export, PDF, entry editing
 src/MedicalCalendar/
 ├── App.xaml(.cs)               Theme, shared styles, single-instance + crash handling
 ├── MainWindow.xaml(.cs)        Shell: sidebar, Today page, Calendar page + day panel
