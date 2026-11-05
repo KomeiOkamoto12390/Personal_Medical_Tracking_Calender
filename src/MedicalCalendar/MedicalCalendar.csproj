@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>MedicalCalendar</RootNamespace>
+    <AssemblyName>MedicalCalendar</AssemblyName>
+
+    <!-- Full version/publisher metadata: unsigned binaries with no metadata look
+         suspicious to Defender/SmartScreen heuristics. -->
+    <Product>Personal Medical Tracking Calendar</Product>
+    <AssemblyTitle>Personal Medical Tracking Calendar</AssemblyTitle>
+    <Description>Personal medical tracking calendar</Description>
+    <Company>Komei Okamoto</Company>
+    <Authors>Komei Okamoto</Authors>
+    <Copyright>Copyright © 2026 Komei Okamoto</Copyright>
+    <Version>0.1.0</Version>
+
+    <!-- Manifest: asInvoker (no UAC prompt), Per-Monitor-V2 DPI, Win10/11 compat. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- Smooth-running defaults -->
+    <TieredPGO>true</TieredPGO>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!-- Release publish: self-contained x64 so the user needs no .NET install.
+       ReadyToRun precompiles for fast startup. Single-file is used, but
+       compression and self-extraction are OFF: packed/self-extracting exes are
+       a common source of antivirus false positives. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+</Project>
