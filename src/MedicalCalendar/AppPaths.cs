@@ -9,8 +9,9 @@ namespace MedicalCalendar;
 /// </summary>
 public static class AppPaths
 {
-    /// <summary>Set MEDCAL_DATA_DIR to use a different folder (handy for testing).</summary>
-    public static string DataDir { get; } =
+    /// <summary>Set MEDCAL_DATA_DIR to use a different folder (handy for testing).
+    /// Tests may also reassign it directly.</summary>
+    public static string DataDir { get; internal set; } =
         Environment.GetEnvironmentVariable("MEDCAL_DATA_DIR") is { Length: > 0 } custom
             ? custom
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MedicalCalendar");

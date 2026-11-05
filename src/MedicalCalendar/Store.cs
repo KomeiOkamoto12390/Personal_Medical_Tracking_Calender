@@ -41,6 +41,11 @@ public sealed class Store
     public AppData Data { get; private set; } = new();
     public event Action<string>? StatusChanged;
 
+    /// <summary>Shows a warning to the user. Replaceable so tests don't block on a message box.</summary>
+    public Action<string> Warn { get; set; } = message =>
+        System.Windows.MessageBox.Show(message, "Medical Calendar",
+            System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+
     public Store()
     {
         _timer.Tick += (_, _) => { _timer.Stop(); SaveNow(); };
@@ -171,11 +176,10 @@ public sealed class Store
         if (restored.Length == 0) Data = new AppData();
 
         Log.Write($"Data file unreadable: {error}");
-        System.Windows.MessageBox.Show(
+        Warn(
             $"Your saved data could not be read ({error.Message})." +
             (keptAt != null ? $"\n\nThe original file was kept unchanged at:\n{keptAt}" : "") +
-            (restored.Length > 0 ? restored : "\n\nNo readable backup was found, so the app is starting empty."),
-            "Medical Calendar", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            (restored.Length > 0 ? restored : "\n\nNo readable backup was found, so the app is starting empty."));
     }
 
     /// <summary>Keeps one copy of the data file per day (newest 30) in the backups folder.</summary>

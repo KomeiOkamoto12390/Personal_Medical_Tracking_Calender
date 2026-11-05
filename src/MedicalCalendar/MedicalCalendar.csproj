@@ -44,6 +44,10 @@
     <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="MedicalCalendar.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Pinned: 6.2.4 is the last MIT-licensed release. 6.5.0+ is AGPL-3.0 and needs a runtime license key. -->
     <PackageReference Include="PDFsharp-MigraDoc" Version="[6.2.4]" />
   </ItemGroup>
