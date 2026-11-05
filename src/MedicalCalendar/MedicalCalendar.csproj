@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -18,13 +18,15 @@
     <Company>Komei Okamoto</Company>
     <Authors>Komei Okamoto</Authors>
     <Copyright>Copyright © 2026 Komei Okamoto</Copyright>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
 
     <!-- Manifest: asInvoker (no UAC prompt), Per-Monitor-V2 DPI, Win10/11 compat. -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
     <!-- Smooth-running defaults -->
     <TieredPGO>true</TieredPGO>
+    <!-- WPF Fluent (Windows 11) theme API is flagged experimental; opt in. -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
     <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
 
@@ -41,5 +43,9 @@
     <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Pinned: 6.2.4 is the last MIT-licensed release. 6.5.0+ is AGPL-3.0 and needs a runtime license key. -->
+    <PackageReference Include="PDFsharp-MigraDoc" Version="[6.2.4]" />
+  </ItemGroup>
 
 </Project>
