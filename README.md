@@ -2,7 +2,7 @@
 
 A private, offline health log for Windows. Record medications, symptoms, vitals and appointments each day, review them on a calendar, and export a clean PDF report to bring to your doctor.
 
-Native Windows app (C# / WPF on .NET 10). No account, no cloud, no internet connection — your data stays on your PC.
+Native Windows app (C# / WPF on .NET 10). No account, no cloud — your data stays on your PC. Installs per-user and updates itself without touching your data.
 
 ![Today page](docs/screenshots/today.png)
 
@@ -60,20 +60,35 @@ Native Windows app (C# / WPF on .NET 10). No account, no cloud, no internet conn
 
 **Requirements:** Windows 10 (version 1809 or later) or Windows 11, 64-bit. Nothing else — .NET is included in the app.
 
-1. Get `MedicalCalendar.exe`, either from the repository's **Releases** page or by [building it yourself](#building-from-source).
-2. Put it anywhere you like, for example `C:\Users\<you>\Apps\MedicalCalendar\`.
-3. Double-click it. To pin it, right-click → **Pin to Start** or **Show more options → Send to → Desktop (create shortcut)**.
+### Installer (recommended)
 
-There is no installer and nothing is written outside your user profile. To uninstall, delete the exe (and, if you want, your data folder — see [Your data](#your-data)).
+1. Download `KomeiOkamoto.MedicalCalendar-win-Setup.exe` from the repository's **Releases** page.
+2. Double-click it. It installs for your Windows user only. No administrator prompt, no questions. Medical Calendar opens when it's done and appears in the Start menu.
+
+**Updates are automatic.** Each time the app starts, it quietly checks for a newer version and downloads it in the background. When it's ready, a **"Update ready"** box appears in the sidebar:
+
+- Click **Restart to update** to switch now, or
+- just keep working — the update installs itself when you close the app.
+
+**Your data is never touched by an update.** The program is installed in `%LOCALAPPDATA%\KomeiOkamoto.MedicalCalendar`; your log lives in a separate folder, `%LOCALAPPDATA%\MedicalCalendar` (see [Your data](#your-data)). As an extra safety net, a copy of your data is saved to `backups\before-update-<old>-to-<new>-<time>.json` right before every update.
+
+**Uninstall:** *Settings → Apps → Installed apps → Medical Calendar → Uninstall*. This removes the program only. Your data folder stays, so reinstalling later picks up where you left off. Delete `%LOCALAPPDATA%\MedicalCalendar` yourself if you also want to erase your log.
+
+### Portable exe (no installer)
+
+1. Get `MedicalCalendar.exe` from **Releases**, or [build it yourself](#building-from-source).
+2. Put it anywhere and double-click it.
+
+The portable exe uses the same data folder, but **does not update itself**: download the new exe and replace the old one. Your data is unaffected.
 
 ### "Windows protected your PC"
 
-The exe is not code-signed yet. If you **downloaded** it, Windows SmartScreen may show this warning the first time. To run it:
+The installer and exe are not code-signed yet. If you **downloaded** them, Windows SmartScreen may show this warning the first time. To run anyway:
 
 - Click **More info → Run anyway**, or
-- Right-click the exe → **Properties** → tick **Unblock** → **OK**.
+- Right-click the file → **Properties** → tick **Unblock** → **OK**.
 
-An exe you build yourself on your own PC never shows this warning.
+Files you build yourself on your own PC never show this warning.
 
 ---
 
@@ -121,7 +136,7 @@ Everything is stored **only on this PC**, in your user profile:
 
 Paste `%LOCALAPPDATA%\MedicalCalendar` into the File Explorer address bar to open it.
 
-- **No network access.** The app never connects to the internet.
+- **No data leaves your PC.** The only network access is the installed app checking GitHub for a new version. It sends no health data. The portable exe never goes online.
 - **Safe saving.** Changes are saved within half a second, written to a temporary file first and then swapped in, so a crash or power cut can't leave a half-written file.
 - **Automatic backups.** Each day the app is opened, a copy of the data file goes into `backups\`.
 - **Damaged file protection.** If `data.json` ever can't be read, the app keeps it untouched (as `data.unreadable-<date>.json`), loads the newest good backup, and tells you what it did.
@@ -152,7 +167,8 @@ Paste `%LOCALAPPDATA%\MedicalCalendar` into the File Explorer address bar to ope
 | Task | Command |
 |---|---|
 | Run in development | `run.cmd` or `dotnet run --project src/MedicalCalendar` |
-| Build the release exe | `publish.cmd` → `dist\MedicalCalendar.exe` |
+| Build the portable exe | `publish.cmd` → `dist\MedicalCalendar.exe` |
+| Build the installer + update packages | `installer.cmd` → `artifacts\releases\` |
 | Run the tests | `dotnet test` |
 
 The helper scripts are `.cmd` files so PowerShell's script execution policy can't block them. If `dotnet` isn't recognised right after installing the SDK, open a new terminal.
@@ -165,10 +181,14 @@ The release build is a single, **self-contained** x64 exe (about 215 MB, because
 
 ```
 MedicalCalendar.sln
-run.cmd / publish.cmd           Dev run and release build
+run.cmd / publish.cmd           Dev run and portable release build
+installer.cmd                   Installer + update packages (Velopack)
+dotnet-tools.json               Pinned build tools (vpk)
 docs/                           Screenshots and a sample report
 tests/MedicalCalendar.Tests/    xUnit tests: data/backup/recovery, export, PDF, entry editing
 src/MedicalCalendar/
+├── Program.cs                  Entry point; runs Velopack install/update hooks first
+├── Updater.cs                  Checks, downloads and applies updates (Velopack)
 ├── App.xaml(.cs)               Theme, shared styles, single-instance + crash handling
 ├── MainWindow.xaml(.cs)        Shell: sidebar, Today page, Calendar page + day panel
 ├── SectionCard.xaml(.cs)       One category card (entries + add/edit row), wide or compact
@@ -205,11 +225,28 @@ To add or change built-in items, edit the lists in [Catalog.cs](src/MedicalCalen
 
 ## Releasing a new version
 
-1. Update `<Version>` in [MedicalCalendar.csproj](src/MedicalCalendar/MedicalCalendar.csproj) and `assemblyIdentity version` in [app.manifest](src/MedicalCalendar/app.manifest).
-2. Add an entry to [CHANGELOG.md](CHANGELOG.md).
-3. Run `publish.cmd` and check `dist\MedicalCalendar.exe` starts.
-4. Commit, then tag: `git tag -a v1.2.3 -m "v1.2.3"` and `git push origin v1.2.3`.
-5. On GitHub, create a release from the tag and attach `MedicalCalendar.exe` and its SHA-256 (`certutil -hashfile dist\MedicalCalendar.exe SHA256`).
+Installed copies update themselves from this repository's **GitHub Releases**, using the files Velopack puts in `artifacts\releases\`.
+
+1. Update `<Version>` in [MedicalCalendar.csproj](src/MedicalCalendar/MedicalCalendar.csproj) and `assemblyIdentity version` in [app.manifest](src/MedicalCalendar/app.manifest). Versions must go up (`1.0.0` → `1.0.1`).
+2. Add an entry to [CHANGELOG.md](CHANGELOG.md). Run `dotnet test`.
+3. Commit, tag and push: `git tag -a v1.2.3 -m "v1.2.3"`, `git push origin v1.2.3`.
+4. Fetch the previous release so a small delta update can be built (skip for the very first release):
+   ```cmd
+   dotnet vpk download github --repoUrl https://github.com/KomeiOkamoto12390/Personal_Medical_Tracking_Calender --outputDir artifacts\releases
+   ```
+5. Build: `installer.cmd` (and `publish.cmd` if you also ship the portable exe).
+6. Upload and publish the GitHub release. Use a token with *Contents: read and write* access to the repo:
+   ```cmd
+   dotnet vpk upload github --repoUrl https://github.com/KomeiOkamoto12390/Personal_Medical_Tracking_Calender --outputDir artifacts\releases --tag v1.2.3 --releaseName "Medical Calendar 1.2.3" --publish --token <token>
+   ```
+   Optionally attach `dist\MedicalCalendar.exe` (portable) to the same release.
+7. Running copies pick up the update on their next start.
+
+**Testing an update locally.** Set `MEDCAL_UPDATE_SOURCE` to a folder containing `vpk pack` output (or an http URL) and `MEDCAL_DATA_DIR` to a test data folder, then start an installed copy.
+
+**Things not to change:**
+- The Velopack `--packId` in `installer.cmd` (`KomeiOkamoto.MedicalCalendar`). It names the install folder and identifies the app for updates. It must never be `MedicalCalendar`, because that's the data folder and uninstalling deletes the install folder.
+- `Velopack` (NuGet) and `vpk` (`dotnet-tools.json`) must stay on the same version.
 
 ---
 

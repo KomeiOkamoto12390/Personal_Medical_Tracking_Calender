@@ -23,6 +23,9 @@
     <!-- Manifest: asInvoker (no UAC prompt), Per-Monitor-V2 DPI, Win10/11 compat. -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
+    <!-- Custom Main (Program.cs) so the Velopack installer/updater hooks run before WPF starts. -->
+    <StartupObject>MedicalCalendar.Program</StartupObject>
+
     <!-- Smooth-running defaults -->
     <TieredPGO>true</TieredPGO>
     <!-- WPF Fluent (Windows 11) theme API is flagged experimental; opt in. -->
@@ -50,6 +53,8 @@
   <ItemGroup>
     <!-- Pinned: 6.2.4 is the last MIT-licensed release. 6.5.0+ is AGPL-3.0 and needs a runtime license key. -->
     <PackageReference Include="PDFsharp-MigraDoc" Version="[6.2.4]" />
+    <!-- Installer + auto-update (MIT). Keep in step with the vpk tool version in dotnet-tools.json. -->
+    <PackageReference Include="Velopack" Version="[1.2.161]" />
   </ItemGroup>
 
 </Project>

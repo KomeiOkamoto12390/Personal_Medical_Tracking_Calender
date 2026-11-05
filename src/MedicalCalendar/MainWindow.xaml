@@ -38,8 +38,22 @@
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
+                <TextBlock x:Name="VersionText" DockPanel.Dock="Bottom" FontSize="11" Margin="8,4,0,0"
+                           Foreground="{StaticResource MutedBrush}"/>
                 <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" FontSize="11" Margin="8,0,0,0"
                            Foreground="{StaticResource SubtleBrush}" TextWrapping="Wrap"/>
+
+                <!-- Shown when a newer version has been downloaded in the background -->
+                <Border x:Name="UpdateBanner" DockPanel.Dock="Bottom" Visibility="Collapsed" Margin="0,0,0,14"
+                        Background="#E8F0FE" CornerRadius="10" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="Update ready" FontSize="13" FontWeight="SemiBold" Foreground="#1A4FAF"/>
+                        <TextBlock x:Name="UpdateText" FontSize="12" Foreground="#1A4FAF" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                        <Button Style="{StaticResource AccentButton}" Height="30" HorizontalAlignment="Left"
+                                Content="Restart to update" AutomationProperties.Name="Restart to update"
+                                Click="ApplyUpdate_Click"/>
+                    </StackPanel>
+                </Border>
 
                 <StackPanel>
                     <RadioButton x:Name="NavDay" Style="{StaticResource NavItem}" GroupName="nav"

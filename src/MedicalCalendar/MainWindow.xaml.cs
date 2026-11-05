@@ -15,6 +15,8 @@ public partial class MainWindow : Window
     private const int MaxChips = 3;
 
     private readonly Store _store = new();
+    private readonly Updater _updater = new();
+    private string? _updateVersion;
     private readonly CultureInfo _culture = CultureInfo.CurrentCulture;
     private readonly List<CategorySection> _sections;
 
@@ -49,8 +51,38 @@ public partial class MainWindow : Window
         ShowDay(DateTime.Today, animate: false);
         NavDay.IsChecked = true;
 
+        VersionText.Text = $"Version {_updater.CurrentVersion}";
+
         SourceInitialized += (_, _) => StyleTitleBar();
-        Closing += (_, _) => _store.Flush();
+        Loaded += async (_, _) => await CheckForUpdateAsync();
+        Closing += (_, _) =>
+        {
+            _store.Flush();
+            if (_updater.HasDownloadedUpdate)
+            {
+                // Not applied via the button: install quietly once the window has closed.
+                _store.BackupBeforeUpdate(_updater.CurrentVersion, _updateVersion ?? "next");
+                _updater.ApplyOnExit();
+            }
+        };
+    }
+
+    // ================= Updates =================
+
+    private async Task CheckForUpdateAsync()
+    {
+        var version = await _updater.CheckAndDownloadAsync();
+        if (version is null) return;
+        _updateVersion = version;
+        UpdateText.Text = $"Version {version} has been downloaded. Your data is kept.";
+        UpdateBanner.Visibility = Visibility.Visible;
+        Fade(UpdateBanner, 0);
+    }
+
+    private void ApplyUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        _store.BackupBeforeUpdate(_updater.CurrentVersion, _updateVersion ?? "next");
+        _updater.ApplyAndRestart();
     }
 
     // ================= Navigation =================

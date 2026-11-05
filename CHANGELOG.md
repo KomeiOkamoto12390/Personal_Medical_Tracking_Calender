@@ -2,6 +2,13 @@
 
 All notable changes to Medical Calendar are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Installer and automatic updates** (Velopack). `Setup.exe` installs for the current user with no admin prompt. Installed copies check GitHub Releases on start, download updates in the background (small delta packages) and offer **Restart to update**, or apply them when the app closes. Data is stored separately and is never touched by an update or uninstall. A safety copy is saved to `backups\` before each update.
+- App version shown in the sidebar.
+- Automated tests (`dotnet test`).
+
 ## [1.0.0] — 2026-11-05
 
 First production release.

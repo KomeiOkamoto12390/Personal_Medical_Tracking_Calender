@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 *.swp
 
 /dist/
+
+# Installer build output (Velopack)
+/artifacts/

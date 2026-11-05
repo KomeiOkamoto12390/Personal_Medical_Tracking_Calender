@@ -198,6 +198,26 @@ public sealed class Store
         }
     }
 
+    /// <summary>
+    /// Extra safety copy taken right before an update is applied (kept outside the daily rotation).
+    /// Updates never touch the data folder, but a new version might migrate the file format.
+    /// </summary>
+    public void BackupBeforeUpdate(string fromVersion, string toVersion)
+    {
+        Flush();
+        try
+        {
+            if (!File.Exists(AppPaths.DataFile)) return;
+            Directory.CreateDirectory(AppPaths.BackupDir);
+            File.Copy(AppPaths.DataFile,
+                Path.Combine(AppPaths.BackupDir, $"before-update-{fromVersion}-to-{toVersion}-{DateTime.Now:yyyyMMdd-HHmmss}.json"));
+        }
+        catch (Exception ex)
+        {
+            Log.Write($"Pre-update backup failed: {ex.Message}");
+        }
+    }
+
     private static IEnumerable<string> BackupFiles() =>
         Directory.Exists(AppPaths.BackupDir)
             ? Directory.GetFiles(AppPaths.BackupDir, "data-*.json").OrderByDescending(f => f, StringComparer.Ordinal)
